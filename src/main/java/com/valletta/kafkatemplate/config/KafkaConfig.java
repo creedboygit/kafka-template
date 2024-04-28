@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.config.TopicConfig;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -31,10 +32,15 @@ public class KafkaConfig {
         Map<String, Object> kafkaStreamConfig = new HashMap<>();
 
         kafkaStreamConfig.put(StreamsConfig.APPLICATION_ID_CONFIG, "stream-test");
+//        kafkaStreamConfig.put(StreamsConfig.STATE_DIR_CONFIG, "D:\\test");
         kafkaStreamConfig.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
         kafkaStreamConfig.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
         kafkaStreamConfig.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
-        kafkaStreamConfig.put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 3);
+//        kafkaStreamConfig.put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 3);
+
+        kafkaStreamConfig.put(StreamsConfig.producerPrefix(ProducerConfig.ACKS_CONFIG), "all");
+//        kafkaStreamConfig.put(StreamsConfig.topicPrefix(TopicConfig.MIN_IN_SYNC_REPLICAS_CONFIG), 2);
+//        kafkaStreamConfig.put(StreamsConfig.NUM_STANDBY_REPLICAS_CONFIG, 1);
 
         return new KafkaStreamsConfiguration(kafkaStreamConfig);
     }
