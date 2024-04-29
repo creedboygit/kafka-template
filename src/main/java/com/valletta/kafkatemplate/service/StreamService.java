@@ -3,7 +3,9 @@ package com.valletta.kafkatemplate.service;
 import java.time.Duration;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
+import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
+import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.JoinWindows;
 import org.apache.kafka.streams.kstream.KStream;
@@ -18,6 +20,7 @@ public class StreamService {
     private static final Serde<String> STRING_SERDE = Serdes.String();
 
     @Autowired
+//    public void buildPipeline(StreamsBuilder sb) {
     public void buildPipeline(StreamsBuilder sb) {
 
 //        KStream<String, String> myStream = sb.stream("vallettaTopic", Consumed.with(STRING_SERDE, STRING_SERDE));
@@ -45,12 +48,16 @@ public class StreamService {
                 stringJoiner,
                 JoinWindows.ofTimeDifferenceWithNoGrace(Duration.ofSeconds(10)));
 
+//        joinedStream.print(Printed.toSysOut());
+
         KStream<String, String> outerJoinedStream = leftStream.outerJoin(rightStream,
                 stringOuterJoiner,
                 JoinWindows.ofTimeDifferenceWithNoGrace(Duration.ofSeconds(10)));
 
         joinedStream.print(Printed.toSysOut());
-        joinedStream.to("joinedMsg");
+        joinedStream.to("joinedMsg2");
         outerJoinedStream.to("joinedMsg");
+
+        final Topology topology = sb.build();
     }
 }
